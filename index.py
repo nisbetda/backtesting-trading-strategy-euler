@@ -12,9 +12,30 @@ import pandas as pd
 import csv
 import requests
 import matplotlib
+#==============================================================================================================================
+#Tasks:
+#A
+#change unix timestamp in dataFrame to a number based on date i.e. 08012019 instead of 1564704000000
 
+#create new data frames
+#2019 yearly and monthly dataFrames
+#df_2019 = ?
+#df_August_2019 = ?
 
+#2020 dataFrame
 
+#2021 dataFrame
+
+#B
+#Tensorflow idea
+
+#C
+#jupyter notebook in google colab
+
+#D
+#use matplotlib to make a graph in step 4
+ 
+#==============================================================================================================================
 
 #1. 
 # Get data. https://datahub.io/cryptocurrency/bitcoin#pandas
@@ -60,24 +81,6 @@ print(df.dtypes)
 
 print(df.info)
 
-
-#A
-#change unix timestamp in dataFrame to a number based on date i.e. 08012019 instead of 1564704000000
-
-#create new data frames
-#2019 yearly and monthly dataFrames
-#df_2019 = ?
-#df_August_2019 = ?
-
-#2020 dataFrame
-
-#2021 dataFrame
-
-#B
-#Tensorflow idea
-
-#C
-#jupyter notebook in google colab
 
 #3. 
 # make separate file with the Euler game theory strategy. 
