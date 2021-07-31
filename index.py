@@ -11,6 +11,9 @@ import datapackage
 import pandas as pd
 import csv
 import requests
+import matplotlib
+
+
 
 
 #1. 
@@ -57,8 +60,11 @@ print(df.dtypes)
 
 print(df.info)
 
-#change unix timestamp in dataFrame to a single number i.e. 1,2,3,...9999 instead of 1564704000000, 1564790400000, 1564876800000,...1627603200000
 
+#A
+#change unix timestamp in dataFrame to a number based on date i.e. 08012019 instead of 1564704000000
+
+#create new data frames
 #2019 yearly and monthly dataFrames
 #df_2019 = ?
 #df_August_2019 = ?
@@ -67,6 +73,11 @@ print(df.info)
 
 #2021 dataFrame
 
+#B
+#Tensorflow idea
+
+#C
+#jupyter notebook in google colab
 
 #3. 
 # make separate file with the Euler game theory strategy. 
