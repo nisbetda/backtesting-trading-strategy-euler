@@ -1,17 +1,15 @@
-
 from requests.exceptions import ConnectionError, Timeout, TooManyRedirects
 import json
 import pprint
 import pandas as pd
 import numpy as np
-import plotly.express as px
-import plotly
+#import plotly.express as px
+#import plotly
 from datetime import date
-import datapackage
-import pandas as pd
+#import datapackage
 import csv
 import requests
-import matplotlib
+import matplotlib.pyplot as plt
 #==============================================================================================================================
 #Tasks:
 #A
