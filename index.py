@@ -50,6 +50,10 @@ import matplotlib.pyplot as plt
    #     pprint.pprint(resource.read())
  
 
+def convertFromUnixTimeToDateTime(unixTime):
+   return datetime.utcfromtimestamp(unixTime/1000).strftime('%m%d%Y')
+
+
 #Use CoinCap API to request historical data
 url = 'http://api.coincap.io/v2/assets/bitcoin/history?interval=d1'#&start=1592585794000&end=1613753794000' #can we use a variable for the unix time 1592585794000 ? 1613753794000
 
@@ -66,24 +70,22 @@ url = 'http://api.coincap.io/v2/assets/bitcoin/history?interval=d1'#&start=15925
 #df = pd.DataFrame(bitcoin_data)
 #df.to_csv('bitcoin-data', index=False)
 
+#Creating dataframe that stores data [priceUSD, time, date] from website to pandas dataframe
 df = pd.read_csv('bitcoin-data')
 
-print(df['date'])
+#Split data into three smaller data frames based on year
+df2019 = df[df['date'].str.contains('2019')]
+df2020 = df[df['date'].str.contains('2020')]
+df2021 = df[df['date'].str.contains('2021')]
 
-#show sample of data
-#print(df.sample)
-#show data types
-#print(df.dtypes)
+print(df2021)
 
-#create new data frame, from August 2019 to July 2021
-#df = pd.DataFrame(bitcoin_data, columns=['time', 'priceUSD'])
-#convert priceUSD from type object to float
-#df['priceUSD'] = pd.to_numeric(df['priceUSD'], errors='coerce').fillna(0, downcast='infer')
-#show data types
-#print(df.dtypes)
+#Convert time values from Unix Time to datatime [Month Day Year]
+df2019['time'] = df['time'].apply(convertFromUnixTimeToDateTime)
+df2020['time'] = df['time'].apply(convertFromUnixTimeToDateTime)
+df2021['time'] = df['time'].apply(convertFromUnixTimeToDateTime)
 
-#print(df.info)
-
+print(df2021)
 
 #3. 
 # make separate file with the Euler game theory strategy. 
@@ -96,7 +98,3 @@ print(df['date'])
 
 #https://docs.coincap.io/
 #https://www.youtube.com/watch?v=EoW4XFdh7gc
-
-df2019 = df[df['date'].str.contains('2019')]
-df2020 = df[df['date'].str.contains('2020')]
-df2021 = df[df['date'].str.contains('2021')]
