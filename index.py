@@ -3,13 +3,17 @@ import json
 import pprint
 import pandas as pd
 import numpy as np
-#import plotly.express as px
-#import plotly
+import plotly.express as px
+import plotly
 from datetime import date, datetime
-#import datapackage
+import datapackage
 import csv
 import requests
 import matplotlib.pyplot as plt
+
+#Supressing SettingWithCopyWarning
+pd.options.mode.chained_assignment = None  # default='warn'
+
 #==============================================================================================================================
 #Tasks:
 #A
@@ -53,9 +57,27 @@ import matplotlib.pyplot as plt
 def convertFromUnixTimeToDateTime(unixTime):
    return datetime.utcfromtimestamp(unixTime/1000).strftime('%m%d%Y')
 
+def assignMonth(numMonth):
+   month = {
+      "01":"January",
+      "02":"February",
+      "03":"March",
+      "04":"April",
+      "05":"May",
+      "06":"June",
+      "07":"July",
+      "08":"August",
+      "09":"September",
+      "10":"October",
+      "11":"Novemeber",
+      "12":"December"
+   }
 
+   return month.get(str(numMonth)[0:2], "Error")
+
+########################### ONLY USED ONCE TO STORE SPECIFC DATA LOCALLY ################################################################################
 #Use CoinCap API to request historical data
-url = 'http://api.coincap.io/v2/assets/bitcoin/history?interval=d1'#&start=1592585794000&end=1613753794000' #can we use a variable for the unix time 1592585794000 ? 1613753794000
+#url = 'http://api.coincap.io/v2/assets/bitcoin/history?interval=d1'#&start=1592585794000&end=1613753794000' #can we use a variable for the unix time 1592585794000 ? 1613753794000
 
 #payload = {}
 #headers = {}
@@ -69,23 +91,22 @@ url = 'http://api.coincap.io/v2/assets/bitcoin/history?interval=d1'#&start=15925
 # create pandas dataframe
 #df = pd.DataFrame(bitcoin_data)
 #df.to_csv('bitcoin-data', index=False)
+########################### ONLY USED ONCE TO STORE SPECIFC DATA LOCALLY ################################################################################
 
 #Creating dataframe that stores data [priceUSD, time, date] from website to pandas dataframe
 df = pd.read_csv('bitcoin-data')
 
-#Split data into three smaller data frames based on year
-df2019 = df[df['date'].str.contains('2019')]
-df2020 = df[df['date'].str.contains('2020')]
-df2021 = df[df['date'].str.contains('2021')]
-
-print(df2021)
-
 #Convert time values from Unix Time to datatime [Month Day Year]
-df2019['time'] = df['time'].apply(convertFromUnixTimeToDateTime)
-df2020['time'] = df['time'].apply(convertFromUnixTimeToDateTime)
-df2021['time'] = df['time'].apply(convertFromUnixTimeToDateTime)
+df['time'] = df['time'].apply(convertFromUnixTimeToDateTime)
 
-print(df2021)
+#Adding new column that stores what month the piece of data is from
+df['month'] = df['time'].apply(assignMonth)
+
+monthlyDataframe = df[df['month'].str.contains('July') & df['date'].str.contains('2021')]
+
+print(df)
+
+print(monthlyDataframe)
 
 #3. 
 # make separate file with the Euler game theory strategy. 
@@ -93,6 +114,8 @@ print(df2021)
 #4. 
 # make graphs to visualize the price
 
+#plt.fill_between(df2021['time'], df2021['priceUsd'], )
+#plt.show()
 
 #What we used:
 
