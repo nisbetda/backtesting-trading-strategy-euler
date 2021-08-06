@@ -60,6 +60,9 @@ pd.options.mode.chained_assignment = None  # default='warn'
 def convertFromUnixTimeToDateTime(unixTime):
    return datetime.utcfromtimestamp(unixTime/1000).strftime('%m%d%Y')
 
+def extractDate(dte):
+   return dte[:10]
+
 def assignMonth(numMonth):
    month = {
       "01":"January",
@@ -141,7 +144,7 @@ def eulerStoppingTheory(data):
 
 #Creating dataframe that stores data [priceUSD, time, date] from website to pandas dataframe
 df = pd.read_csv('bitcoin-data')
-pprint.pprint(df)
+#pprint.pprint(df)
 ################
 # ALSO CREATE AN EXCEL FILE  <----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # LIKE THIS: 
@@ -156,6 +159,9 @@ df['time'] = df['time'].apply(convertFromUnixTimeToDateTime)
 
 #Adding new column that stores what month the piece of data is from
 df['month'] = df['time'].apply(assignMonth)
+
+#Extracts the date (first 10 characters) from the date column and stores that value in the column
+df['date'] = df['date'].apply(extractDate)
 
 ################
 # add column that stores the day <----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
