@@ -10,6 +10,7 @@ import datapackage
 import csv
 import requests
 import matplotlib.pyplot as plt
+import math
 
 #Supressing SettingWithCopyWarning
 pd.options.mode.chained_assignment = None  # default='warn'
@@ -75,6 +76,47 @@ def assignMonth(numMonth):
 
    return month.get(str(numMonth)[0:2], "Error")
 
+def eulerStoppingTheory(data):
+   # Determing number of days to set as sample data
+   numberOfDays = len(data.index)
+   sampleSize = math.ceil(numberOfDays/math.e)
+
+   # Splitting data into sample and test data. 
+   # Sample Dataframe Range: [0, sampleSize]
+   # Test Dataframe Range: [sampleSize + 1, numberOfDays]
+   sampleDf = data.iloc[:sampleSize,:]
+   testDf = data.iloc[sampleSize:,:]
+
+   # Storing minimum and maximum value of sample range
+   maxSampleValue = sampleDf['priceUsd'].max()
+   minSampleValue = sampleDf['priceUsd'].min()
+
+   # Storing minimum and maximum value of test range
+   maxPossibleTestValue = testDf['priceUsd'].max()
+   minPossibleTestValue = testDf['priceUsd'].min()
+
+   # Initializing variable to store the first possible value that is greater than or equal to (or less than or equal to) to the max and min of the sample data
+   maxSelectedTestValue = None
+   minSelectedTestValue = None
+
+   # Looking for the first value in test data that is larger than the largest data point in sample dataset
+   for max in testDf['priceUsd']:
+      if max >= maxSampleValue:
+         maxSelectedTestValue = max
+         break
+
+   # Looking for the first value in test data that is larger than the largest data point in sample dataset
+   for min in testDf['priceUsd']:
+      if min <= minSampleValue:
+         minSelectedTestValue = min
+         break
+   
+   # Storing collected results in array
+   listOfValues = [minSampleValue, maxSampleValue, minPossibleTestValue, maxPossibleTestValue, minSelectedTestValue, maxSelectedTestValue]
+
+   # Returning array
+   return listOfValues
+
 ########################### ONLY USED ONCE TO STORE SPECIFC DATA LOCALLY ################################################################################
 #Use CoinCap API to request historical data
 #url = 'http://api.coincap.io/v2/assets/bitcoin/history?interval=d1'#&start=1592585794000&end=1613753794000' #can we use a variable for the unix time 1592585794000 ? 1613753794000
@@ -102,14 +144,37 @@ df['time'] = df['time'].apply(convertFromUnixTimeToDateTime)
 #Adding new column that stores what month the piece of data is from
 df['month'] = df['time'].apply(assignMonth)
 
-monthlyDataframe = df[df['month'].str.contains('July') & df['date'].str.contains('2021')]
-
-print(df)
-
-print(monthlyDataframe)
+monthlyData = None
+months = {"August", "September", "October", "November", "December", "January", "February", "March", "April", "May", "June", "July"}
 
 #3. 
 # make separate file with the Euler game theory strategy. 
+
+#Initializing container to store results of applying optimal stopping theory
+# Key is the MonthYear
+# Value is an array that contains a list of values (list of values listed in eulerStoppingTheory method)
+dict = {}
+
+for year in range(2019, 2022):
+   for month in months:
+      # Storing subset of data based on month and year
+      monthlyData = df[df['month'].str.contains(month) & df['date'].str.contains(str(year))]
+
+      #Checks to make sure that there is data to be processed
+      if not monthlyData.empty:
+         # Applys optimal stopping theory to sub-dataset
+         result = eulerStoppingTheory(monthlyData)
+
+         #Creating entry in dict
+         key = month + str(year)
+         dict[key] = result
+
+# Used to print dict in a readable form
+#for key in dict.keys():
+#   print(key)
+#   print(dict[key])
+#   print()
+#
 
 #4. 
 # make graphs to visualize the price
