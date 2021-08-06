@@ -41,6 +41,23 @@ def convertFromUnixTimeToDateTime(unixTime):
 def extractDate(dte):
    return dte[:10]
 
+def getWeekday(dte):
+   weekday = {
+      0:"Monday",
+      1:"Tuesday",
+      2:"Wednesday",
+      3:"Thursday",
+      4:"Friday",
+      5:"Saturday",
+      6:"Sunday",
+   }
+
+   year, month, day = dte.split('-')
+
+   obtainedWeekday = date(int(year), int(month), int(day)).weekday()
+
+   return weekday.get(obtainedWeekday, None)
+
 def assignMonth(numMonth):
    month = {
       "01":"January",
@@ -126,7 +143,7 @@ plt.legend('legend')
 plt.plot(df_excel['priceUsd'])
 plt.ylabel('Price')
 
-plt.xlabel('Days (starting August 2019')
+#plt.xlabel('Days (starting August 2019')
 plt.show()
 
 #Saving the chart into a JPG file
@@ -142,7 +159,10 @@ df['time'] = df['time'].apply(convertFromUnixTimeToDateTime)
 df['month'] = df['time'].apply(assignMonth)
 
 #Extracts the date (first 10 characters) from the date column and stores that value in the column
-df['date'] = df['date'].apply(extractDate)
+df['extractedDate'] = df['date'].apply(extractDate)
+
+#Stores the what day of the week it is based on the date
+df['weekday'] = df['extractedDate'].apply(getWeekday)
 
 ################
 # add column that stores the day <----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -150,8 +170,6 @@ df['date'] = df['date'].apply(extractDate)
 
 monthlyData = None
 months = {"August", "September", "October", "November", "December", "January", "February", "March", "April", "May", "June", "July"}
-
-
 
 ################
 # Create a starburst graph of the percent values of each day <--------------------------------------------------------------------------------------------------------------------------------
@@ -191,7 +209,7 @@ for year in range(2019, 2022):
 ##################
 
 #print the dictionary
-pprint.pprint(dict)
+#pprint.pprint(dict)
 
 ################
 # mention results for March and April 2020 (COVID lockdowns)  <-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
