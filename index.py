@@ -100,15 +100,14 @@ def eulerStoppingTheory(data):
    minSelectedTestValue = None
 
    # Looking for the first value in test data that is larger than the largest data point in sample dataset
-################
-   for max in testDf['priceUsd']: # IS THIS LOOKING FOR THE PERCENT DIFFERENCE BETWEEN DAYS? IT CANT JUST BE THE NOMINAL VALUE OF THE PRICE <--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-      if max >= maxSampleValue:
+   for max in testDf['priceUsd']: 
+      if max > maxSampleValue:
          maxSelectedTestValue = max
          break
 
    # Looking for the first value in test data that is larger than the largest data point in sample dataset
    for min in testDf['priceUsd']:
-      if min <= minSampleValue:
+      if min < minSampleValue:
          minSelectedTestValue = min
          break
    
@@ -117,12 +116,19 @@ def eulerStoppingTheory(data):
 
    # Returning array
    return listOfValues
-################
 
+def calculateWinningRate(months):
+   numberOfWins = 0
+
+   for monthYear in months.keys():
+      if months[monthYear][5] is not None:
+         if months[monthYear][5] >= months[monthYear][3]:
+            numberOfWins += 1
+
+   return numberOfWins
 
 #Creating dataframe that stores data [priceUSD, time, date] from website to pandas dataframe
 df = pd.read_csv('bitcoin-data')
-#pprint.pprint(df)
 ################
 
 ################
@@ -132,22 +138,6 @@ df.to_excel(filename)
 
 # read the excel data
 df_excel = pd.read_excel(filename, engine='openpyxl',)
-################
-
-# make a price chart using matplotlib
-plt.title('Bitcoin Price')
-
-plt.xticks(rotation=70)
-plt.legend('legend')
-
-plt.plot(df_excel['priceUsd'])
-plt.ylabel('Price')
-
-#plt.xlabel('Days (starting August 2019')
-plt.show()
-
-#Saving the chart into a JPG file
-plt.savefig('bitcoin_historical_price_chart.png', bbox_inches='tight')
 
 ################
 
@@ -162,6 +152,8 @@ df['extractedDate'] = df['date'].apply(extractDate)
 
 #Stores the what day of the week it is based on the date
 df['weekday'] = df['extractedDate'].apply(getWeekday)
+
+#print(df)
 
 monthlyData = None
 months = {"August", "September", "October", "November", "December", "January", "February", "March", "April", "May", "June", "July"}
@@ -204,24 +196,36 @@ for year in range(2019, 2022):
 ##################
 
 #print the dictionary
-#pprint.pprint(dict)
+pprint.pprint(dict)
+
+print(calculateWinningRate(dict))
+
+df.to_excel("Monthly Data.xlsx")
+
+maxSampleSets = []
+
+for monthKeys in dict.keys():
+   maxSampleSets.append(dict[monthKeys][1])
+
+# make a price chart using matplotlib
+plt.title('Bitcoin Price')
+
+plt.xticks(rotation=70)
+plt.legend('legend')
+
+plt.plot(df['priceUsd'])
+plt.ylabel('Price (in US Dollars)')
+
+plt.xlabel('Days (starting August 2019)')
+
+plt.show()
+
+#Saving the chart into a JPG file
+plt.savefig('bitcoin_historical_price_chart.png', bbox_inches='tight')
 
 ################
 # mention results for March and April 2020 (COVID lockdowns)  <-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 ################
-
-# Used to print dict in a readable form
-#for key in dict.keys():
-#   print(key)
-#   print(dict[key])
-#   print()
-#
-
-#4. 
-# make graphs to visualize the price
-
-#plt.fill_between(df2021['time'], df2021['priceUsd'], )
-#plt.show()
 
 #What we used:
 
