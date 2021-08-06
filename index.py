@@ -15,6 +15,8 @@ import math
 #Supressing SettingWithCopyWarning
 pd.options.mode.chained_assignment = None  # default='warn'
 
+
+
 #==============================================================================================================================
 #Tasks:
 #A
@@ -100,7 +102,8 @@ def eulerStoppingTheory(data):
    minSelectedTestValue = None
 
    # Looking for the first value in test data that is larger than the largest data point in sample dataset
-   for max in testDf['priceUsd']:
+################
+   for max in testDf['priceUsd']: # IS THIS LOOKING FOR THE PERCENT DIFFERENCE BETWEEN DAYS? IT CAN JUST BE THE NOMINAL VALUE OF THE PRICE <--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
       if max >= maxSampleValue:
          maxSelectedTestValue = max
          break
@@ -116,6 +119,7 @@ def eulerStoppingTheory(data):
 
    # Returning array
    return listOfValues
+################
 
 ########################### ONLY USED ONCE TO STORE SPECIFC DATA LOCALLY ################################################################################
 #Use CoinCap API to request historical data
@@ -137,6 +141,15 @@ def eulerStoppingTheory(data):
 
 #Creating dataframe that stores data [priceUSD, time, date] from website to pandas dataframe
 df = pd.read_csv('bitcoin-data')
+pprint.pprint(df)
+################
+# ALSO CREATE AN EXCEL FILE  <----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+# LIKE THIS: 
+# df = pd.DataFrame(data_frame)
+# filename = 'frame_the_data' + str(today) + '.xlsx'
+# df.to_excel(filename)
+################
+
 
 #Convert time values from Unix Time to datatime [Month Day Year]
 df['time'] = df['time'].apply(convertFromUnixTimeToDateTime)
@@ -144,17 +157,37 @@ df['time'] = df['time'].apply(convertFromUnixTimeToDateTime)
 #Adding new column that stores what month the piece of data is from
 df['month'] = df['time'].apply(assignMonth)
 
+################
+# add column that stores the day <----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+################
+
 monthlyData = None
 months = {"August", "September", "October", "November", "December", "January", "February", "March", "April", "May", "June", "July"}
 
-#3. 
+
+
+################
+# Create a starburst graph of the percent values of each day <--------------------------------------------------------------------------------------------------------------------------------
+# like this:
+# Crypto, Name, Algorithm, Quantity, USD_Price, USD_Value, BTC_Value, Percent = df['Crypto'], df['Name'], df['Algorithm'], df['Quantity'], df['USD Price'], df['USD Value'], df['BTC Value'], df['Percent']
+
+#the visualization part 
+# fig = px.sunburst(df, path = [Crypto, Name, Percent], values = Percent, color = df['USD Value'], title = 'Portfolio')
+# fig.show()
+
+#save to file called "Crypto_Sunburst(today's date)"
+# plotly.offline.plot(fig, filename = 'Crypto_Sunburst' + str(today) + '.html')
+##################
+
+3. 
 # make separate file with the Euler game theory strategy. 
 
 #Initializing container to store results of applying optimal stopping theory
 # Key is the MonthYear
 # Value is an array that contains a list of values (list of values listed in eulerStoppingTheory method)
 dict = {}
-
+################## 
+# Create an Excel file of this <-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 for year in range(2019, 2022):
    for month in months:
       # Storing subset of data based on month and year
@@ -168,6 +201,14 @@ for year in range(2019, 2022):
          #Creating entry in dict
          key = month + str(year)
          dict[key] = result
+##################
+
+#print the dictionary
+pprint.pprint(dict)
+
+################
+# mention results for March and April 2020 (COVID lockdowns)  <-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+################
 
 # Used to print dict in a readable form
 #for key in dict.keys():
