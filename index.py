@@ -151,7 +151,6 @@ plt.savefig('bitcoin_historical_price_chart.png', bbox_inches='tight')
 
 ################
 
-
 #Convert time values from Unix Time to datatime [Month Day Year]
 df['time'] = df['time'].apply(convertFromUnixTimeToDateTime)
 
@@ -163,10 +162,6 @@ df['extractedDate'] = df['date'].apply(extractDate)
 
 #Stores the what day of the week it is based on the date
 df['weekday'] = df['extractedDate'].apply(getWeekday)
-
-################
-# add column that stores the day <----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-################
 
 monthlyData = None
 months = {"August", "September", "October", "November", "December", "January", "February", "March", "April", "May", "June", "July"}
