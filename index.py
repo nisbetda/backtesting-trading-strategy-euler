@@ -12,50 +12,28 @@ import requests
 import matplotlib.pyplot as plt
 import math
 
+#==============================================================================================================================
+########################### ONLY USED ONCE TO STORE SPECIFC DATA LOCALLY ################################################################################
+#Use CoinCap API to request historical data
+#url = 'http://api.coincap.io/v2/assets/bitcoin/history?interval=d1'#&start=1592585794000&end=1613753794000' #can we use a variable for the unix time 1592585794000 ? 1613753794000
+
+#payload = {}
+#headers = {}
+
+#response = requests.request("GET", url, headers=headers, data=payload)
+
+#json_data = json.loads(response.text.encode('utf8'))
+#bitcoin_data = json_data["data"]
+
+# create pandas dataframe and save to csv file
+#df = pd.DataFrame(bitcoin_data)
+#df.to_csv('bitcoin-data', index=False)
+########################### ONLY USED ONCE TO STORE SPECIFC DATA LOCALLY ################################################################################
+
+#==============================================================================================================================
+
 #Supressing SettingWithCopyWarning
 pd.options.mode.chained_assignment = None  # default='warn'
-
-
-
-#==============================================================================================================================
-#Tasks:
-#A
-#change unix timestamp in dataFrame to a number based on date i.e. 08012019 instead of 1564704000000
-
-#create new data frames
-#2019 yearly and monthly dataFrames
-#df_2019 = ?
-#df_August_2019 = ?
-
-#2020 dataFrame
-
-#2021 dataFrame
-
-#B
-#Tensorflow idea
-
-#C
-#jupyter notebook in google colab
-
-#D
-#use matplotlib to make a graph in step 4
- 
-#==============================================================================================================================
-
-#1. 
-# Get data. https://datahub.io/cryptocurrency/bitcoin#pandas
-#from datapackage import Package
-
-#package = Package('https://datahub.io/cryptocurrency/bitcoin/datapackage.json')
-
-# print list of all resources:
-#pprint.pprint(package.resource_names)
-
-# print processed tabular data (if exists any)
-#for resource in package.resources:
-   # if resource.descriptor['datahub']['type'] == 'derived/csv':
-   #     pprint.pprint(resource.read())
- 
 
 def convertFromUnixTimeToDateTime(unixTime):
    return datetime.utcfromtimestamp(unixTime/1000).strftime('%m%d%Y')
@@ -106,7 +84,7 @@ def eulerStoppingTheory(data):
 
    # Looking for the first value in test data that is larger than the largest data point in sample dataset
 ################
-   for max in testDf['priceUsd']: # IS THIS LOOKING FOR THE PERCENT DIFFERENCE BETWEEN DAYS? IT CAN JUST BE THE NOMINAL VALUE OF THE PRICE <--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+   for max in testDf['priceUsd']: # IS THIS LOOKING FOR THE PERCENT DIFFERENCE BETWEEN DAYS? IT CANT JUST BE THE NOMINAL VALUE OF THE PRICE <--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
       if max >= maxSampleValue:
          maxSelectedTestValue = max
          break
@@ -124,33 +102,36 @@ def eulerStoppingTheory(data):
    return listOfValues
 ################
 
-########################### ONLY USED ONCE TO STORE SPECIFC DATA LOCALLY ################################################################################
-#Use CoinCap API to request historical data
-#url = 'http://api.coincap.io/v2/assets/bitcoin/history?interval=d1'#&start=1592585794000&end=1613753794000' #can we use a variable for the unix time 1592585794000 ? 1613753794000
-
-#payload = {}
-#headers = {}
-
-#response = requests.request("GET", url, headers=headers, data=payload)
-
-#json_data = json.loads(response.text.encode('utf8'))
-#bitcoin_data = json_data["data"]
-
-#2
-# create pandas dataframe
-#df = pd.DataFrame(bitcoin_data)
-#df.to_csv('bitcoin-data', index=False)
-########################### ONLY USED ONCE TO STORE SPECIFC DATA LOCALLY ################################################################################
 
 #Creating dataframe that stores data [priceUSD, time, date] from website to pandas dataframe
 df = pd.read_csv('bitcoin-data')
 #pprint.pprint(df)
 ################
-# ALSO CREATE AN EXCEL FILE  <----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-# LIKE THIS: 
-# df = pd.DataFrame(data_frame)
-# filename = 'frame_the_data' + str(today) + '.xlsx'
-# df.to_excel(filename)
+
+################
+# create an excel file from the csv file
+filename = 'bitcoin_historical_price_spreadsheet' + '.xlsx'
+df.to_excel(filename)
+
+# read the excel data
+df_excel = pd.read_excel(filename, engine='openpyxl',)
+################
+
+# make a price chart using matplotlib
+plt.title('Bitcoin Price')
+
+plt.xticks(rotation=70)
+plt.legend('legend')
+
+plt.plot(df_excel['priceUsd'])
+plt.ylabel('Price')
+
+plt.xlabel('Days (starting August 2019')
+plt.show()
+
+#Saving the chart into a JPG file
+plt.savefig('bitcoin_historical_price_chart.png', bbox_inches='tight')
+
 ################
 
 
